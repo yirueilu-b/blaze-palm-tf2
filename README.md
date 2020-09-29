@@ -4,7 +4,7 @@ Implement BlazePalm ( hand detector ) using Tensorflow 2.0.
 
 ## Usage
 
-- Install packages
+- Install dependencies
 
     ```
     pip install -r requirements.txt
@@ -12,7 +12,7 @@ Implement BlazePalm ( hand detector ) using Tensorflow 2.0.
 
 - Training
 
-    Check `train.ipynb` to train a model
+    Check `train.ipynb` for training a model
 
 ## TODO
 
@@ -21,3 +21,11 @@ Implement BlazePalm ( hand detector ) using Tensorflow 2.0.
 - Implement decoder and inference scripts
 
 - Visualize scripts
+
+## Reference
+
+- [MediaPipe Hands: On-device Real-time Hand Tracking](https://arxiv.org/abs/2006.10214)
+- [ssd_keras](https://github.com/pierluigiferrari/ssd_keras)
+- [ssd.pytorch](https://github.com/amdegroot/ssd.pytorch)
+- [a-PyTorch-Tutorial-to-Object-Detection](https://github.com/sgrvinod/a-PyTorch-Tutorial-to-Object-Detection)
+
