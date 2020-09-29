@@ -3,4 +3,5 @@ venv
 dataset
 .idea/
 
+*.zip
 *.pyc
