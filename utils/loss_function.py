@@ -1,20 +1,15 @@
 import tensorflow as tf
+import numpy as np
 
 
 def binary_focal_loss_fixed(y_true, y_pred):
-    """
-    :param y_true: A tensor of the same shape as `y_pred`
-    :param y_pred:  A tensor resulting from a sigmoid
-    :return: Output tensor.
-    """
     gamma = 2.
     alpha = .25
     y_true = tf.cast(y_true, tf.float32)
+    y_pred = tf.convert_to_tensor(y_pred, np.float32)
     # Define epsilon so that the back-propagation will not result in NaN for 0 divisor case
     epsilon = tf.keras.backend.epsilon()
-    # Add the epsilon to prediction value
-    # y_pred = y_pred + epsilon
-    # Clip the prediciton value
+    # Clip the prediction value
     y_pred = tf.keras.backend.clip(y_pred, epsilon, 1.0 - epsilon)
     # Calculate p_t
     p_t = tf.where(tf.keras.backend.equal(y_true, 1), y_pred, 1 - y_pred)
@@ -31,20 +26,7 @@ def binary_focal_loss_fixed(y_true, y_pred):
     return loss
 
 
-def smooth_L1_loss(y_true, y_pred):
-    '''
-    Compute smooth L1 loss, see references.
-    Arguments:
-        y_true (nD tensor): A TensorFlow tensor of any shape containing the ground truth data.
-            In this context, the expected tensor has shape `(batch_size, #boxes, 4)` and
-            contains the ground truth bounding box coordinates, where the last dimension
-            contains `(xmin, xmax, ymin, ymax)`.
-        y_pred (nD tensor): A TensorFlow tensor of identical structure to `y_true` containing
-            the predicted data, in this context the predicted bounding box coordinates.
-    Returns:
-        The smooth L1 loss, a nD-1 Tensorflow tensor. In this context a 2D tensor
-        of shape (batch, n_boxes_total).
-    '''
+def smooth_l1_loss(y_true, y_pred):
     absolute_loss = tf.abs(y_true - y_pred)
     square_loss = 0.5 * (y_true - y_pred) ** 2
     l1_loss = tf.where(tf.less(absolute_loss, 1.0), square_loss, absolute_loss - 0.5)
@@ -65,7 +47,7 @@ class SSDLoss:
         n_boxes = tf.shape(y_pred)[1]
 
         classification_loss = binary_focal_loss_fixed(y_true[:, :, 0], y_pred[:, :, 0])
-        localization_loss = smooth_L1_loss(y_true[:, :, 1:], y_pred[:, :, 1:])
+        localization_loss = smooth_l1_loss(y_true[:, :, 1:], y_pred[:, :, 1:])
 
         negatives = y_true[:, :, 0]
         negatives = -(negatives - 1)
@@ -97,7 +79,10 @@ class SSDLoss:
 
         class_loss = pos_class_loss + neg_class_loss
         loc_loss = tf.reduce_sum(localization_loss * positives, axis=-1)
-        total_loss = (class_loss + self.alpha * loc_loss) / tf.maximum(1.0, tf.cast(n_positive, tf.float32))
+        total_loss = (tf.cast(class_loss, tf.float32) + self.alpha * tf.cast(loc_loss, tf.float32)) / tf.maximum(1.0,
+                                                                                                                 tf.cast(
+                                                                                                                     n_positive,
+                                                                                                                     tf.float32))
         # total_loss = total_loss * tf.to_float(batch_size)
 
         return total_loss

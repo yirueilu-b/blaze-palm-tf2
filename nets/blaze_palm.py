@@ -91,8 +91,7 @@ def build_blaze_palm_model(to_64=False):
         reg_8 = tf.keras.layers.Conv2D(filters=36, kernel_size=(1, 1), strides=(1, 1), padding='same')(upsample_64)
         reg_16 = tf.keras.layers.Conv2D(filters=36, kernel_size=(1, 1), strides=(1, 1), padding='same')(upsample_32)
         reg_32 = tf.keras.layers.Conv2D(filters=36, kernel_size=(1, 1), strides=(1, 1), padding='same')(upsample_16)
-        reg_64 = tf.keras.layers.Conv2D(filters=108, kernel_size=(1, 1), strides=(1, 1), padding='same')(
-            blaze_palm_block_8)
+        reg_64 = tf.keras.layers.Conv2D(filters=108, kernel_size=(1, 1), strides=(1, 1), padding='same')(blaze_palm_block_8)
         reshape_reg_8 = tf.keras.layers.Reshape([-1, 18])(reg_8)
         reshape_reg_16 = tf.keras.layers.Reshape([-1, 18])(reg_16)
         reshape_reg_32 = tf.keras.layers.Reshape([-1, 18])(reg_32)

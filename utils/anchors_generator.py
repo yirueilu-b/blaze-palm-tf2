@@ -6,7 +6,7 @@ from utils.anchor_config import Anchor, AnchorsConfig
 class AnchorsGenerator:
     def __init__(self, config):
         """
-        :param config: Anchor configs see `anchor_config.py`
+        :param config: Configuration for anchors
         """
         self.config = config
 
