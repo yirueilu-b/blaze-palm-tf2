@@ -5,3 +5,4 @@ dataset
 
 *.zip
 *.pyc
+*.h5
