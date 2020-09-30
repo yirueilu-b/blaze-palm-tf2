@@ -2,11 +2,32 @@ import tensorflow as tf
 import numpy as np
 
 
+def focal_loss_sigmoid(y_true, y_pred, alpha=0.25, gamma=2):
+    """
+    Computer focal loss for binary classification
+    Args:
+      labels: A int32 tensor of shape [batch_size].
+      logits: A float32 tensor of shape [batch_size].
+      alpha: A scalar for focal loss alpha hyper-parameter. If positive samples number
+      > negtive samples number, alpha < 0.5 and vice versa.
+      gamma: A scalar for focal loss gamma hyper-parameter.
+    Returns:
+      A tensor of the same shape as `lables`
+    """
+    y_pred = tf.math.sigmoid(y_pred)
+    y_true = tf.cast(y_true, tf.float32)
+    y_pred = tf.cast(y_pred, tf.float32)
+    L = -y_true * (1 - alpha) * ((1 - y_pred) * gamma) * tf.math.log(y_pred) - (1 - y_true) * alpha * (
+                y_pred ** gamma) * tf.math.log(1 - y_pred)
+    return L
+
+
 def binary_focal_loss_fixed(y_true, y_pred):
     gamma = 2.
     alpha = .25
     y_true = tf.cast(y_true, tf.float32)
     y_pred = tf.convert_to_tensor(y_pred, np.float32)
+    y_pred = tf.math.sigmoid(y_pred)
     # Define epsilon so that the back-propagation will not result in NaN for 0 divisor case
     epsilon = tf.keras.backend.epsilon()
     # Clip the prediction value
@@ -46,7 +67,7 @@ class SSDLoss:
         batch_size = tf.shape(y_pred)[0]
         n_boxes = tf.shape(y_pred)[1]
 
-        classification_loss = binary_focal_loss_fixed(y_true[:, :, 0], y_pred[:, :, 0])
+        classification_loss = focal_loss_sigmoid(y_true[:, :, 0], y_pred[:, :, 0])
         localization_loss = smooth_l1_loss(y_true[:, :, 1:], y_pred[:, :, 1:])
 
         negatives = y_true[:, :, 0]
