@@ -17,11 +17,18 @@ anchors_normalized = np.array([[anchor.x_center, anchor.y_center, anchor.w, anch
 
 
 class DataGenerator(tf.keras.utils.Sequence):
-    'Generates data for Keras'
-
     def __init__(self, image_dir, annotation_dir, batch_size=32, image_shape=(256, 256, 3),
                  num_coordinates=18, num_anchors=2944,
                  shuffle=True):
+        """
+        :param image_dir: the directory contains all images
+        :param annotation_dir: the directory contains all json annotation files
+        :param batch_size: batch_size
+        :param image_shape: image shape (width, height, channel)
+        :param num_coordinates: 4 coordinates for 1 bounding box and 14 coordinates for 7 key points
+        :param num_anchors: 8x8, 16x16 and 32x32 feature maps extract 8*8*6 + 16*16*2 + 32*32*2 = 2944 anchors
+        :param shuffle: if shuffle data on each epoch ends
+        """
 
         self.file_name_list = [os.path.split(file_name)[-1].replace('.jpg', '') for file_name in
                                glob.glob(os.path.join(image_dir, '*.jpg'))]

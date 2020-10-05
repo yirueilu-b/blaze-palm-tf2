@@ -1,5 +1,9 @@
+"""
+BlazePalm Hand Detector Model Structure
+input: RGB normalized image which is padded and resize to (256, 256, 3).
+output: (2944, 19), 2944 anchors with 1 for class score 4 for bounding box and 14 for 7 hand key points.
+"""
 import tensorflow as tf
-import numpy as np
 
 IMAGE_HEIGHT, IMAGE_WIDTH, IMAGE_CHANNEL = 256, 256, 3
 

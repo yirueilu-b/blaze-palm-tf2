@@ -75,7 +75,7 @@ def encode(matches, anchors):
 
 
 def match(annotation, anchors, match_threshold=0.5):
-    """
+    """The main function in encoder, will be used in `data_generator.py`
     :param annotation: Ground truth labels and ground truth boxes, Shape: [(num_obj, 1), (num_obj, num_coordinate)].
     :param anchors: Anchor boxes Shape: [n_priors,4].
     :param match_threshold: overlap threshold used when mathing boxes
