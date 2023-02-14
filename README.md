@@ -1,5 +1,7 @@
 # MediaPipe BlazePalm Model
 
+> # This repo is no longer maintained and there might be some mistakes in the code.
+
 An unofficial Implementation BlazePalm ( hand detector ) using Tensorflow 2.0.
 
 ## Usage
